@@ -1,6 +1,19 @@
+import { resolveTypeReferenceDirective } from 'typescript'
 import './assets/main.css'
 
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp, ref } from 'vue'
 
-createApp(App).mount('#app')
+
+
+
+
+createApp(({
+    setup() {
+        return {
+            count: ref(0)
+        }
+    }
+})).mount('#app')
+
+
+
