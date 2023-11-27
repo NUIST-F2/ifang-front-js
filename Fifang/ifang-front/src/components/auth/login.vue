@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="login">
     <h2>Login</h2>
     <form @submit.prevent="login">
@@ -18,14 +18,27 @@
     </form>
     <p v-if="error" class="error-message">{{ error }}</p>
   </div>
+</template> -->
+
+<template>
+  <div>
+    <input v-model="username" type="text" placeholder="Username">
+    <input v-model="password" type="password" placeholder="Password">
+    <button @click="login">Login</button>
+    <div v-if="loginError">{{ loginErrorMessage }}</div>
+    <div v-if="isLoggedIn">Logged in successfully!</div>
+  </div>
 </template>
+
+
 
 <script>
 import { ref } from 'vue';
+import axios from 'axios';
 
 export default {
   name: 'Login',
-  data() {
+ /*  data() {
     return {
       username: '',
       password: '',
@@ -55,8 +68,45 @@ export default {
         // 登录失败
         this.error = 'Invalid username or password';
       }
-    }
-  }
+      const signInDto = {
+        username: this.username,
+        password: this.password,
+        role: 'admin', // 根据需要设置角色
+      };
+ */
+ 
+
+ data() {
+    return {
+      username: '',
+      password: '',
+      loginError: false,
+      loginErrorMessage: '',
+      isLoggedIn: false,
+    };
+  },
+  methods: {
+    login() {
+      const signInDto = {
+        username: this.username,
+        password: this.password,
+        role: 'user', // 根据需要设置角色
+      };
+
+      axios.post('http://localhost:3000/api/auth/login', signInDto)
+        .then(response => {
+          // 登录成功，处理响应数据
+          this.isLoggedIn = true;
+          this.loginError = false;
+        })
+        .catch(error => {
+          // 登录失败，处理错误
+          this.loginError = true;
+          this.loginErrorMessage = error.message;
+          this.isLoggedIn = false;
+        });
+    },
+  },
 };
 </script>
 
