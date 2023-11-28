@@ -1,32 +1,25 @@
-<!-- <template>
-  <div class="login">
-    <h2>Login</h2>
-    <form @submit.prevent="login">
+
+<template>
+  <div>
+
+    <form>
       <div class="form-group">
         <label for="username">Username</label>
-        <input type="text" id="username" v-model="username" required>
+        <input type="text" id="username" v-model="username" required placeholder="Username">
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" id="password" v-model="password" required>
+        <input type="password" id="password" v-model="password" required placeholder="Password">
       </div>
       <div class="form-group">
         <label for="role">Role</label>
         <input type="text" id="role" v-model="role">
       </div>
-      <button type="submit">Login</button>
+      <button @click="login">Login</button>
     </form>
-    <p v-if="error" class="error-message">{{ error }}</p>
-  </div>
-</template> -->
-
-<template>
-  <div>
-    <input v-model="username" type="text" placeholder="Username">
-    <input v-model="password" type="password" placeholder="Password">
-    <button @click="login">Login</button>
     <div v-if="loginError">{{ loginErrorMessage }}</div>
     <div v-if="isLoggedIn">Logged in successfully!</div>
+    <div v-if="isTokenReturn">Recieve token</div>
   </div>
 </template>
 
@@ -38,51 +31,15 @@ import axios from 'axios';
 
 export default {
   name: 'Login',
- /*  data() {
-    return {
-      username: '',
-      password: '',
-      role: '',
-      error: '',
-      token: ''
-    };
-  },
-  methods: {
-    async login() {
 
-      try {
-        const response = await axios.post('/api/auth/login', {
-          username: this.username,
-          password: this.password,
-          role: this.role,
-        });
-
-
-        const token = response.data.token;
-        console.log('Token:', token);
-        this.token = token;
-        // 登录成功
-        // 这里可以进行跳转或其他操作
-        console.log('Login successful');
-      } catch (error) {
-        // 登录失败
-        this.error = 'Invalid username or password';
-      }
-      const signInDto = {
-        username: this.username,
-        password: this.password,
-        role: 'admin', // 根据需要设置角色
-      };
- */
- 
-
- data() {
+  data() {
     return {
       username: '',
       password: '',
       loginError: false,
       loginErrorMessage: '',
       isLoggedIn: false,
+      token: '',
     };
   },
   methods: {
@@ -90,14 +47,16 @@ export default {
       const signInDto = {
         username: this.username,
         password: this.password,
-        role: 'user', // 根据需要设置角色
+        role: 'admin', // 根据需要设置角色
       };
 
       axios.post('http://localhost:3000/api/auth/login', signInDto)
         .then(response => {
           // 登录成功，处理响应数据
           this.isLoggedIn = true;
+          this.isTokenReturn = true;
           this.loginError = false;
+          this.token = response.data.token;
         })
         .catch(error => {
           // 登录失败，处理错误
